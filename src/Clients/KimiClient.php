@@ -4,7 +4,7 @@ namespace Phpais\AiPlugin\Clients;
 
 use Phpais\AiPlugin\Abstracts\AiClient;
 
-class MoonshotClient extends AiClient
+class KimiClient extends AiClient
 {
     protected function getEndpoint(): string
     {
@@ -20,7 +20,7 @@ class MoonshotClient extends AiClient
                     'content' => $prompt
                 ]
             ],
-            'model' => $this->config['model'] ?? 'moonshot-v1-8k',
+            'model' => $this->config['model'] ?? 'kimi',
             'temperature' => $options['temperature'] ?? 0.7,
             'max_tokens' => $options['max_tokens'] ?? 1024,
         ];

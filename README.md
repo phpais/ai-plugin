@@ -1,10 +1,10 @@
 # PHP AI 插件
 
-PHP AI 插件，整合文心、千问、火山、DeepSeek、混元大模型、智谱清言、月之暗面等AI模型接口，支持ThinkPHP和Laravel框架。
+PHP AI 插件，整合文心、千问、火山、DeepSeek、混元大模型、智谱清言、Kimi、ChatGPT、Gemini、Minmax等AI模型接口，支持ThinkPHP和Laravel框架。
 
 ## 功能特性
 
-- ✅ 支持多个AI模型：文心、千问、火山、DeepSeek、混元大模型、智谱清言、月之暗面
+- ✅ 支持多个AI模型：文心、千问、火山、DeepSeek、混元大模型、智谱清言、Kimi、ChatGPT、Gemini、Minmax
 - ✅ 统一API接口，简化AI调用
 - ✅ 支持流式响应
 - ✅ 支持ThinkPHP 6.0+
@@ -59,9 +59,23 @@ AI_HUNYUAN_MODEL=hunyuan-pro
 AI_ZHIPU_API_KEY=your_api_key
 AI_ZHIPU_MODEL=glm-4
 
-# 月之暗面配置
-AI_MOONSHOT_API_KEY=your_api_key
-AI_MOONSHOT_MODEL=moonshot-v1-8k
+
+
+# ChatGPT配置
+AI_CHATGPT_API_KEY=your_api_key
+AI_CHATGPT_MODEL=gpt-3.5-turbo
+
+# Gemini配置
+AI_GEMINI_API_KEY=your_api_key
+AI_GEMINI_MODEL=gemini-pro
+
+# Minmax配置
+AI_MINMAX_API_KEY=your_api_key
+AI_MINMAX_MODEL=abab5.5-chat
+
+# Kimi配置
+AI_KIMI_API_KEY=your_api_key
+AI_KIMI_MODEL=kimi
 ```
 
 ### ThinkPHP 配置
@@ -123,9 +137,35 @@ $zhipuClient = AiClientFactory::create('zhipu', config('ai.providers.zhipu'));
 $result = $zhipuClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
 
-// 使用月之暗面
-$moonshotClient = AiClientFactory::create('moonshot', config('ai.providers.moonshot'));
-$result = $moonshotClient->chat('你好，能介绍一下你自己吗？');
+
+
+// 使用ChatGPT
+$chatgptClient = AiClientFactory::create('chatgpt', config('ai.providers.chatgpt'));
+$result = $chatgptClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用Gemini
+$geminiClient = AiClientFactory::create('gemini', config('ai.providers.gemini'));
+$result = $geminiClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用Minmax
+$minmaxClient = AiClientFactory::create('minmax', config('ai.providers.minmax'));
+$result = $minmaxClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用Kimi
+$kimiClient = AiClientFactory::create('kimi', config('ai.providers.kimi'));
+$result = $kimiClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+```
+$minmaxClient = AiClientFactory::create('minmax', config('ai.providers.minmax'));
+$result = $minmaxClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用Kimi
+$kimiClient = AiClientFactory::create('kimi', config('ai.providers.kimi'));
+$result = $kimiClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
 ```
 
@@ -178,10 +218,7 @@ $zhipuClient = AiClientFactory::create('zhipu', config('ai.providers.zhipu'));
 $result = $zhipuClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
 
-// 使用月之暗面
-$moonshotClient = AiClientFactory::create('moonshot', config('ai.providers.moonshot'));
-$result = $moonshotClient->chat('你好，能介绍一下你自己吗？');
-echo $result['text'];
+
 ```
 
 ## API 文档
@@ -228,7 +265,10 @@ echo $result['text'];
 | DeepSeek | DeepSeek | deepseek | DeepSeek的AI模型 |
 | 混元大模型 | 腾讯 | hunyuan | 腾讯的AI模型 |
 | 智谱清言 | 智谱AI | zhipu | 智谱AI的AI模型 |
-| 月之暗面 | 月之暗面 | moonshot | 月之暗面的AI模型 |
+| Kimi | 月之暗面 | kimi | 月之暗面的AI模型 |
+| ChatGPT | OpenAI | chatgpt | OpenAI的AI模型 |
+| Gemini | Google | gemini | Google的AI模型 |
+| Minmax | Minmax | minmax | Minmax的AI模型 |
 
 ## 注意事项
 

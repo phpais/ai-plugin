@@ -60,13 +60,42 @@ return [
             'provider' => 'zhipu',
         ],
         
-        // 月之暗面配置
-        'moonshot' => [
-            'api_key' => env('AI_MOONSHOT_API_KEY', ''),
-            'model' => env('AI_MOONSHOT_MODEL', 'moonshot-v1-8k'),
-            'endpoint' => env('AI_MOONSHOT_ENDPOINT', 'https://api.moonshot.cn/v1/chat/completions'),
-            'timeout' => env('AI_MOONSHOT_TIMEOUT', 30),
-            'provider' => 'moonshot',
+
+        
+        // ChatGPT配置
+        'chatgpt' => [
+            'api_key' => env('AI_CHATGPT_API_KEY', ''),
+            'model' => env('AI_CHATGPT_MODEL', 'gpt-3.5-turbo'),
+            'endpoint' => env('AI_CHATGPT_ENDPOINT', 'https://api.openai.com/v1/chat/completions'),
+            'timeout' => env('AI_CHATGPT_TIMEOUT', 30),
+            'provider' => 'chatgpt',
+        ],
+        
+        // Gemini配置
+        'gemini' => [
+            'api_key' => env('AI_GEMINI_API_KEY', ''),
+            'model' => env('AI_GEMINI_MODEL', 'gemini-pro'),
+            'endpoint' => env('AI_GEMINI_ENDPOINT', 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent'),
+            'timeout' => env('AI_GEMINI_TIMEOUT', 30),
+            'provider' => 'gemini',
+        ],
+        
+        // Minmax配置
+        'minmax' => [
+            'api_key' => env('AI_MINMAX_API_KEY', ''),
+            'model' => env('AI_MINMAX_MODEL', 'abab5.5-chat'),
+            'endpoint' => env('AI_MINMAX_ENDPOINT', 'https://api.minimax.chat/v1/text/chatcompletion_pro'),
+            'timeout' => env('AI_MINMAX_TIMEOUT', 30),
+            'provider' => 'minmax',
+        ],
+        
+        // Kimi配置
+        'kimi' => [
+            'api_key' => env('AI_KIMI_API_KEY', ''),
+            'model' => env('AI_KIMI_MODEL', 'kimi'),
+            'endpoint' => env('AI_KIMI_ENDPOINT', 'https://api.moonshot.cn/v1/chat/completions'),
+            'timeout' => env('AI_KIMI_TIMEOUT', 30),
+            'provider' => 'kimi',
         ],
     ],
 ];

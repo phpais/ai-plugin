@@ -40,7 +40,10 @@ class AiClientFactory
             'deepseek',  // DeepSeek
             'hunyuan',   // 混元大模型
             'zhipu',     // 智谱清言
-            'moonshot',  // 月之暗面
+            'chatgpt',   // ChatGPT
+            'gemini',    // Gemini
+            'minmax',    // Minmax
+            'kimi',      // Kimi (月之暗面)
         ];
     }
 }

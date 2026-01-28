@@ -8,7 +8,7 @@ class HunyuanClient extends AiClient
 {
     protected function getEndpoint(): string
     {
-        return $this->config['endpoint'] ?? 'https://api.moonshot.cn/v1/chat/completions';
+        return $this->config['endpoint'] ?? 'https://hunyuan.tencentcloudapi.com/v1/chat/completions';
     }
     
     protected function prepareRequestData(string $prompt, array $options): array
@@ -20,7 +20,7 @@ class HunyuanClient extends AiClient
                     'content' => $prompt
                 ]
             ],
-            'model' => $this->config['model'] ?? 'moonshot-v1-8k',
+            'model' => $this->config['model'] ?? 'hunyuan-pro',
             'temperature' => $options['temperature'] ?? 0.7,
             'max_tokens' => $options['max_tokens'] ?? 1024,
         ];

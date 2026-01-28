@@ -1,10 +1,10 @@
 # PHP AI 插件
 
-PHP AI 插件，整合文心、千问、火山、deepseek等AI模型接口，支持ThinkPHP和Laravel框架。
+PHP AI 插件，整合文心、千问、火山、DeepSeek、混元大模型、智谱清言、月之暗面等AI模型接口，支持ThinkPHP和Laravel框架。
 
 ## 功能特性
 
-- ✅ 支持多个AI模型：文心、千问、火山、DeepSeek
+- ✅ 支持多个AI模型：文心、千问、火山、DeepSeek、混元大模型、智谱清言、月之暗面
 - ✅ 统一API接口，简化AI调用
 - ✅ 支持流式响应
 - ✅ 支持ThinkPHP 6.0+
@@ -112,6 +112,21 @@ echo $result['text'];
 $deepseekClient = AiClientFactory::create('deepseek', config('ai.providers.deepseek'));
 $result = $deepseekClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
+
+// 使用混元大模型
+$hunyuanClient = AiClientFactory::create('hunyuan', config('ai.providers.hunyuan'));
+$result = $hunyuanClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用智谱清言
+$zhipuClient = AiClientFactory::create('zhipu', config('ai.providers.zhipu'));
+$result = $zhipuClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用月之暗面
+$moonshotClient = AiClientFactory::create('moonshot', config('ai.providers.moonshot'));
+$result = $moonshotClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
 ```
 
 ### ThinkPHP 示例
@@ -151,6 +166,21 @@ echo $result['text'];
 // 使用DeepSeek模型
 $deepseekClient = AiClientFactory::create('deepseek', config('ai.providers.deepseek'));
 $result = $deepseekClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用混元大模型
+$hunyuanClient = AiClientFactory::create('hunyuan', config('ai.providers.hunyuan'));
+$result = $hunyuanClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用智谱清言
+$zhipuClient = AiClientFactory::create('zhipu', config('ai.providers.zhipu'));
+$result = $zhipuClient->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 使用月之暗面
+$moonshotClient = AiClientFactory::create('moonshot', config('ai.providers.moonshot'));
+$result = $moonshotClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
 ```
 

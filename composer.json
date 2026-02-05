@@ -2,7 +2,7 @@
     "name": "phpais/ai-plugin",
     "description": "PHP AI 插件，整合文心、千问、火山、deepseek、混元、智谱清言、月之暗面等AI模型接口，支持ThinkPHP和Laravel框架",
     "type": "library",
-    "version": "1.1.01",
+    "version": "1.2",
     "keywords": ["ai", "php", "thinkphp", "laravel", "wenxin", "qianwen", "volcano", "deepseek"],
     "homepage": "https://github.com/phpais/ai-plugin",
     "license": "MIT",

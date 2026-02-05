@@ -8,35 +8,54 @@ class WenxinClient extends AiClient
 {
     protected function getEndpoint(): string
     {
-        return $this->config['endpoint'] ?? 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions';
+        return $this->config['endpoint'] ?? 'https://qianfan.baidubce.com/v2/chat/completions';
     }
     
-    protected function prepareRequestData(string $prompt, array $options): array
+    protected function doPrepareRequestData(string $prompt, array $options): array
     {
         $data = [
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $prompt
-                ]
-            ],
             'model' => $this->config['model'] ?? 'ernie-bot',
             'temperature' => $options['temperature'] ?? 0.7,
             'max_tokens' => $options['max_tokens'] ?? 1024,
         ];
         
-        if (isset($options['system'])) {
-            array_unshift($data['messages'], [
-                'role' => 'system',
-                'content' => $options['system']
-            ]);
+        // 如果提供了完整的消息数组，直接使用它
+        if (isset($options['messages']) && is_array($options['messages'])) {
+            $data['messages'] = $options['messages'];
+        } else {
+            // 否则使用传统的提示词格式
+            $data['messages'] = [
+                [
+                    'role' => 'user',
+                    'content' => $prompt
+                ]
+            ];
+            
+            // 添加系统提示词
+            if (isset($options['system'])) {
+                array_unshift($data['messages'], [
+                    'role' => 'system',
+                    'content' => $options['system']
+                ]);
+            }
         }
         
         return $data;
     }
     
-    protected function parseResponse($response): array
+    protected function doParseResponse($response): array
     {
+        // 检查新的API端点响应格式
+        if (isset($response['choices']) && isset($response['choices'][0]['message']['content'])) {
+            return [
+                'text' => $response['choices'][0]['message']['content'] ?? '',
+                'usage' => $response['usage'] ?? [],
+                'model' => $response['model'] ?? $this->config['model'],
+                'id' => $response['id'] ?? '',
+            ];
+        }
+        
+        // 保持旧的响应格式兼容
         return [
             'text' => $response['result'] ?? '',
             'usage' => $response['usage'] ?? [],

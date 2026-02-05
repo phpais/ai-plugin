@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Phpais\AiPlugin\Factories\AiClientFactory:
+    public: true
+
+  ai.client:
+    class: Phpais\AiPlugin\Abstracts\AiClient
+    factory: ['@Phpais\AiPlugin\Factories\AiClientFactory', 'create']
+    arguments:
+      - '%ai.config.default%'
+      - '%ai.config.providers.%ai.config.default%'
+
+  ai:
+    alias: ai.client
+    public: true
+
+  Phpais\AiPlugin\Symfony\Twig\Extension\AiExtension:
+    class: Phpais\AiPlugin\Symfony\Twig\Extension\AiExtension
+    arguments: ['@ai']
+    tags:
+      - { name: twig.extension }

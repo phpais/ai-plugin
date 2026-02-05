@@ -8,34 +8,42 @@ class ZhipuClient extends AiClient
 {
     protected function getEndpoint(): string
     {
-        return $this->config['endpoint'] ?? 'https://open.bigmodel.cn/api/mcp/v1/chat/completions';
+        return $this->config['endpoint'] ?? 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
     }
     
-    protected function prepareRequestData(string $prompt, array $options): array
+    protected function doPrepareRequestData(string $prompt, array $options): array
     {
         $data = [
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $prompt
-                ]
-            ],
             'model' => $this->config['model'] ?? 'glm-4',
             'temperature' => $options['temperature'] ?? 0.7,
             'max_tokens' => $options['max_tokens'] ?? 1024,
         ];
         
-        if (isset($options['system'])) {
-            array_unshift($data['messages'], [
-                'role' => 'system',
-                'content' => $options['system']
-            ]);
+        // 如果提供了完整的消息数组，直接使用它
+        if (isset($options['messages']) && is_array($options['messages'])) {
+            $data['messages'] = $options['messages'];
+        } else {
+            // 否则使用传统的提示词格式
+            $data['messages'] = [
+                [
+                    'role' => 'user',
+                    'content' => $prompt
+                ]
+            ];
+            
+            // 添加系统提示词
+            if (isset($options['system'])) {
+                array_unshift($data['messages'], [
+                    'role' => 'system',
+                    'content' => $options['system']
+                ]);
+            }
         }
         
         return $data;
     }
     
-    protected function parseResponse($response): array
+    protected function doParseResponse($response): array
     {
         return [
             'text' => $response['choices'][0]['message']['content'] ?? '',

@@ -11,10 +11,39 @@ class GeminiClient extends AiClient
         return $this->config['endpoint'] ?? 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
     }
     
-    protected function prepareRequestData(string $prompt, array $options): array
+    protected function doPrepareRequestData(string $prompt, array $options): array
     {
         $data = [
-            'contents' => [
+            'generationConfig' => [
+                'temperature' => $options['temperature'] ?? 0.7,
+                'maxOutputTokens' => $options['max_tokens'] ?? 1024,
+            ],
+        ];
+        
+        // 如果提供了完整的消息数组，直接使用它
+        if (isset($options['messages']) && is_array($options['messages'])) {
+            // 转换消息格式以适应Gemini API
+            $geminiContents = [];
+            foreach ($options['messages'] as $message) {
+                if ($message['role'] === 'system') {
+                    // 系统消息使用systemInstruction
+                    $data['systemInstruction'] = $message['content'];
+                } else {
+                    // 其他消息转换为Gemini格式
+                    $geminiContents[] = [
+                        'role' => $message['role'],
+                        'parts' => [
+                            [
+                                'text' => $message['content']
+                            ]
+                        ]
+                    ];
+                }
+            }
+            $data['contents'] = $geminiContents;
+        } else {
+            // 否则使用传统的提示词格式
+            $data['contents'] = [
                 [
                     'parts' => [
                         [
@@ -22,21 +51,18 @@ class GeminiClient extends AiClient
                         ]
                     ]
                 ]
-            ],
-            'generationConfig' => [
-                'temperature' => $options['temperature'] ?? 0.7,
-                'maxOutputTokens' => $options['max_tokens'] ?? 1024,
-            ],
-        ];
-        
-        if (isset($options['system'])) {
-            $data['systemInstruction'] = $options['system'];
+            ];
+            
+            // 添加系统提示词
+            if (isset($options['system'])) {
+                $data['systemInstruction'] = $options['system'];
+            }
         }
         
         return $data;
     }
     
-    protected function parseResponse($response): array
+    protected function doParseResponse($response): array
     {
         return [
             'text' => $response['candidates'][0]['content']['parts'][0]['text'] ?? '',

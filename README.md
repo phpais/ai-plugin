@@ -9,6 +9,10 @@ PHP AI 插件，整合文心、千问、火山、DeepSeek、混元大模型、�
 - ✅ 支持流式响应
 - ✅ 支持ThinkPHP 6.0+
 - ✅ 支持Laravel 8.0+
+- ✅ 支持Symfony 5.0+
+- ✅ 支持Yii 2.0+
+- ✅ 支持Slim 4.0+
+- ✅ 支持Hyperf 2.0+
 - ✅ 灵活的配置系统
 
 ## 安装
@@ -81,6 +85,64 @@ AI_KIMI_MODEL=kimi
 ### ThinkPHP 配置
 
 1. 在 `config` 目录下创建 `ai.php` 配置文件，内容参考 `src/Config/ai.php`
+
+2. 在 `.env` 文件中配置AI模型，配置项与Laravel相同
+
+### Symfony 配置
+
+1. 注册Bundle到 `config/bundles.php`：
+
+```php
+return [
+    // 其他Bundle
+    Phpais\AiPlugin\Symfony\AiPluginBundle::class => ['all' => true],
+];
+```
+
+2. 在 `.env` 文件中配置AI模型，配置项与Laravel相同
+
+### Yii 配置
+
+1. 注册Module到应用配置：
+
+```php
+// config/web.php 或 config/console.php
+return [
+    'modules' => [
+        'aiPlugin' => [
+            'class' => Phpais\AiPlugin\Yii\AiPluginModule::class,
+        ],
+    ],
+];
+```
+
+2. 在 `.env` 文件中配置AI模型，配置项与Laravel相同
+
+### Slim 配置
+
+1. 注册服务到Slim应用：
+
+```php
+use Phpais\AiPlugin\Slim\AiPluginProvider;
+
+$app = AppFactory::create();
+
+// 注册AI插件服务
+$app->add(AiPluginProvider::class);
+```
+
+2. 在 `.env` 文件中配置AI模型，配置项与Laravel相同
+
+### Hyperf 配置
+
+1. 注册Provider到 `config/autoload/provider.php`：
+
+```php
+return [
+    // 其他Provider
+    Phpais\AiPlugin\Hyperf\Provider\AiPluginServiceProvider::class,
+];
+```
 
 2. 在 `.env` 文件中配置AI模型，配置项与Laravel相同
 
@@ -159,15 +221,6 @@ $kimiClient = AiClientFactory::create('kimi', config('ai.providers.kimi'));
 $result = $kimiClient->chat('你好，能介绍一下你自己吗？');
 echo $result['text'];
 ```
-$minmaxClient = AiClientFactory::create('minmax', config('ai.providers.minmax'));
-$result = $minmaxClient->chat('你好，能介绍一下你自己吗？');
-echo $result['text'];
-
-// 使用Kimi
-$kimiClient = AiClientFactory::create('kimi', config('ai.providers.kimi'));
-$result = $kimiClient->chat('你好，能介绍一下你自己吗？');
-echo $result['text'];
-```
 
 ### ThinkPHP 示例
 
@@ -221,6 +274,110 @@ echo $result['text'];
 
 ```
 
+### Symfony 示例
+
+#### 基本使用
+
+```php
+// 注入AI服务
+public function index(Phpais\AiPlugin\Contracts\AiClientInterface $aiClient)
+{
+    // 发送文本请求
+    $result = $aiClient->chat('你好，能介绍一下你自己吗？');
+    echo $result['text'];
+
+    // 带参数的请求
+    $result = $aiClient->chat('写一首关于春天的诗', [
+        'temperature' => 0.8,
+        'max_tokens' => 512,
+        'system' => '你是一位诗人，擅长写抒情诗'
+    ]);
+    echo $result['text'];
+
+    // 流式响应
+    $aiClient->streamChat('写一篇关于AI的文章', function ($chunk) {
+        echo $chunk;
+        flush();
+    });
+}
+```
+
+### Yii 示例
+
+#### 基本使用
+
+```php
+// 发送文本请求
+$result = Yii::$app->get('ai')->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 带参数的请求
+$result = Yii::$app->get('ai')->chat('写一首关于春天的诗', [
+    'temperature' => 0.8,
+    'max_tokens' => 512,
+    'system' => '你是一位诗人，擅长写抒情诗'
+]);
+echo $result['text'];
+
+// 流式响应
+Yii::$app->get('ai')->streamChat('写一篇关于AI的文章', function ($chunk) {
+    echo $chunk;
+    flush();
+});
+```
+
+### Slim 示例
+
+#### 基本使用
+
+```php
+// 发送文本请求
+$result = $app->get('ai')->chat('你好，能介绍一下你自己吗？');
+echo $result['text'];
+
+// 带参数的请求
+$result = $app->get('ai')->chat('写一首关于春天的诗', [
+    'temperature' => 0.8,
+    'max_tokens' => 512,
+    'system' => '你是一位诗人，擅长写抒情诗'
+]);
+echo $result['text'];
+
+// 流式响应
+$app->get('ai')->streamChat('写一篇关于AI的文章', function ($chunk) {
+    echo $chunk;
+    flush();
+});
+```
+
+### Hyperf 示例
+
+#### 基本使用
+
+```php
+// 注入AI服务
+public function index(Phpais\AiPlugin\Contracts\AiClientInterface $aiClient)
+{
+    // 发送文本请求
+    $result = $aiClient->chat('你好，能介绍一下你自己吗？');
+    echo $result['text'];
+
+    // 带参数的请求
+    $result = $aiClient->chat('写一首关于春天的诗', [
+        'temperature' => 0.8,
+        'max_tokens' => 512,
+        'system' => '你是一位诗人，擅长写抒情诗'
+    ]);
+    echo $result['text'];
+
+    // 流式响应
+    $aiClient->streamChat('写一篇关于AI的文章', function ($chunk) {
+        echo $chunk;
+        flush();
+    });
+}
+```
+
 ## API 文档
 
 ### 核心方法
@@ -254,6 +411,81 @@ echo $result['text'];
 获取模型信息
 
 - 返回值: 模型信息数组
+
+#### `setPrepareRequestDataCallback(callable $callback): $this`
+
+设置自定义请求数据准备回调函数
+
+- `$callback`: 接收 `$prompt`、`$options`、`$clientConfig` 参数，返回自定义请求数据数组
+- 返回值: 当前客户端实例，支持链式调用
+
+**使用示例**:
+
+```php
+use Phpais\AiPlugin\Laravel\Facades\AI;
+
+// 获取客户端实例
+$aiClient = app('ai');
+
+// 设置自定义请求数据回调
+$aiClient->setPrepareRequestDataCallback(function ($prompt, $options, $clientConfig) {
+    return [
+        'model' => $clientConfig['model'] ?? 'deepseek-chat',
+        'messages' => [
+            [
+                'role' => 'system',
+                'content' => '你是一位专业的助手，只提供准确的信息。'
+            ],
+            [
+                'role' => 'user',
+                'content' => $prompt
+            ]
+        ],
+        'temperature' => $options['temperature'] ?? 0.7,
+        'max_tokens' => $options['max_tokens'] ?? 1024,
+        'top_p' => 0.9,
+    ];
+});
+
+// 正常调用
+$result = $aiClient->chat('什么是PHP？');
+echo $result['text'];
+```
+
+#### `setParseResponseCallback(callable $callback): $this`
+
+设置自定义响应解析回调函数
+
+- `$callback`: 接收 `$response`、`$clientConfig` 参数，返回自定义响应数据数组
+- 返回值: 当前客户端实例，支持链式调用
+
+**使用示例**:
+
+```php
+use Phpais\AiPlugin\Laravel\Facades\AI;
+
+// 获取客户端实例
+$aiClient = app('ai');
+
+// 设置自定义响应解析回调
+$aiClient->setParseResponseCallback(function ($response, $clientConfig) {
+    return [
+        'answer' => $response['choices'][0]['message']['content'] ?? '无响应',
+        'model' => $response['model'] ?? $clientConfig['model'],
+        'usage' => $response['usage'] ?? [],
+        'custom_fields' => [
+            'timestamp' => time(),
+            'response_length' => strlen($response['choices'][0]['message']['content'] ?? ''),
+            'is_success' => isset($response['choices']) && count($response['choices']) > 0,
+        ]
+    ];
+});
+
+// 正常调用
+$result = $aiClient->chat('什么是PHP？');
+echo $result['answer'];
+echo '处理时间: ' . date('Y-m-d H:i:s', $result['custom_fields']['timestamp']);
+```
 
 ## 支持的AI模型
 

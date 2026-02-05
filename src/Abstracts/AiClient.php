@@ -32,6 +32,20 @@ abstract class AiClient implements AiClientInterface
     protected $config;
     
     /**
+     * 自定义请求数据准备回调
+     * 
+     * @var callable|null
+     */
+    protected $prepareRequestDataCallback;
+    
+    /**
+     * 自定义响应解析回调
+     * 
+     * @var callable|null
+     */
+    protected $parseResponseCallback;
+    
+    /**
      * 构造函数
      * 
      * @param array $config 客户端配置信息
@@ -59,26 +73,7 @@ abstract class AiClient implements AiClientInterface
      */
     abstract protected function getEndpoint(): string;
     
-    /**
-     * 准备请求数据
-     * 
-     * 子类必须实现此方法，将提示词和选项转换为API需要的请求格式
-     * 
-     * @param string $prompt 提示词
-     * @param array $options 可选参数
-     * @return array 格式化的请求数据
-     */
-    abstract protected function prepareRequestData(string $prompt, array $options): array;
-    
-    /**
-     * 解析响应数据
-     * 
-     * 子类必须实现此方法，将API返回的响应转换为统一的格式
-     * 
-     * @param mixed $response API响应数据
-     * @return array 统一格式的响应数据
-     */
-    abstract protected function parseResponse($response): array;
+
     
     /**
      * 发送HTTP请求
@@ -212,4 +207,82 @@ abstract class AiClient implements AiClientInterface
             'provider' => $this->config['provider'] ?? 'unknown', // 模型提供者
         ];
     }
+    
+    /**
+     * 设置自定义请求数据准备回调
+     * 
+     * @param callable $callback 回调函数
+     * @return $this
+     */
+    public function setPrepareRequestDataCallback(callable $callback)
+    {
+        $this->prepareRequestDataCallback = $callback;
+        return $this;
+    }
+    
+    /**
+     * 设置自定义响应解析回调
+     * 
+     * @param callable $callback 回调函数
+     * @return $this
+     */
+    public function setParseResponseCallback(callable $callback)
+    {
+        $this->parseResponseCallback = $callback;
+        return $this;
+    }
+    
+    /**
+     * 准备请求数据
+     * 
+     * 检查是否有自定义回调，如果有则使用回调，否则调用子类实现的方法
+     * 
+     * @param string $prompt 提示词
+     * @param array $options 可选参数
+     * @return array 格式化的请求数据
+     */
+    protected function prepareRequestData(string $prompt, array $options): array
+    {
+        if (isset($this->prepareRequestDataCallback)) {
+            return call_user_func($this->prepareRequestDataCallback, $prompt, $options, $this->config);
+        }
+        return $this->doPrepareRequestData($prompt, $options);
+    }
+    
+    /**
+     * 实际的请求数据准备方法
+     * 
+     * 子类必须实现此方法
+     * 
+     * @param string $prompt 提示词
+     * @param array $options 可选参数
+     * @return array 格式化的请求数据
+     */
+    abstract protected function doPrepareRequestData(string $prompt, array $options): array;
+    
+    /**
+     * 解析响应数据
+     * 
+     * 检查是否有自定义回调，如果有则使用回调，否则调用子类实现的方法
+     * 
+     * @param mixed $response API响应数据
+     * @return array 统一格式的响应数据
+     */
+    protected function parseResponse($response): array
+    {
+        if (isset($this->parseResponseCallback)) {
+            return call_user_func($this->parseResponseCallback, $response, $this->config);
+        }
+        return $this->doParseResponse($response);
+    }
+    
+    /**
+     * 实际的响应解析方法
+     * 
+     * 子类必须实现此方法
+     * 
+     * @param mixed $response API响应数据
+     * @return array 统一格式的响应数据
+     */
+    abstract protected function doParseResponse($response): array;
 }
